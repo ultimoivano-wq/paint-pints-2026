@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Paint & Pints 2026</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: sans-serif; text-align:center; padding:20px;">
+
+<h1>Paint & Pints 2026</h1>
+<p>10 artisti. 1 vincitore.</p>
+
+<div id="artists"></div>
+
+<script>
+const artists = Array.from({length:10}, (_,i)=>({
+  id:i+1,
+  name:"Artista " + (i+1),
+  votes:0
+}));
+
+const container = document.getElementById("artists");
+
+artists.forEach(a=>{
+  const div = document.createElement("div");
+  div.innerHTML = `
+    <h3>${a.name}</h3>
+    <button onclick="vote(${a.id})">Vota</button>
+    <hr/>
+  `;
+  container.appendChild(div);
+});
+
+function vote(id){
+  const name = prompt("Il tuo nome:");
+  const email = prompt("La tua email:");
+
+  if(!email) return alert("Email obbligatoria");
+
+  fetch("/api/vote", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({name,email,artist:id})
+  }).then(()=>alert("Voto registrato"));
+}
+</script>
+
+</body>
+</html>
